@@ -1,0 +1,67 @@
+version: "3"
+
+services:
+  consumer-mongodb:
+    build: ./consumer-mongodb
+    entrypoint: /home/node/consumer-mongodb/.docker/entrypoint.sh
+    container_name: consumer-mongodb
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - 3001:3333
+    volumes:
+      - ./consumer-mongodb:/home/node/consumer-mongodb
+    depends_on:
+      - rabbitmq
+
+  producer-oxygen:
+    build: ./producer-oxygen
+    entrypoint: /home/node/producer-oxygen/.docker/entrypoint.sh
+    container_name: producer-oxygen
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - 3002:3333
+    volumes:
+      - ./producer-oxygen:/home/node/producer-oxygen
+    depends_on:
+      - rabbitmq
+
+  producer-humidity:
+    build: ./producer-humidity
+    entrypoint: /home/node/producer-humidity/.docker/entrypoint.sh
+    container_name: producer-humidity
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - 3003:3333
+    volumes:
+      - ./producer-humidity:/home/node/producer-humidity
+    depends_on:
+      - rabbitmq
+
+  producer-temperature:
+    build: ./producer-temperature
+    entrypoint: /home/node/producer-temperature/.docker/entrypoint.sh
+    container_name: producer-temperature
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - 3004:3333
+    volumes:
+      - ./producer-temperature:/home/node/producer-temperature
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: "rabbitmq:3.8-management-alpine"
+    container_name: broker-rabbitmq
+    hostname: rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+    volumes:
+      - "./.rabbitmq_data:/var/lib/rabbitmq/mnesia"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin

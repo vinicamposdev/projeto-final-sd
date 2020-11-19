@@ -16,3 +16,11 @@ src="https://img.shields.io/badge/-Nodejs-43853d?style=flat-square&logo=Node.js&
 <ul>
     <img alt="LicenseMIT" src="https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square" />
 </ul>
+
+## Uso do Docker:
+
+### Inicialização
+
+docker-compose up --build
+
+docker exec -ti <container-namo or container-id> bash
