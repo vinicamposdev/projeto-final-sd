@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "amqplib": "^0.6.0"
+    "amqplib": "^0.6.0",
+    "config": "^3.3.2",
+    "lodash": "^4.17.20"
   },
   "scripts": {
     "start": "node src/producer/oxygen.js"
