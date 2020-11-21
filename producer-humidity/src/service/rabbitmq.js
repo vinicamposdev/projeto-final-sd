@@ -6,6 +6,7 @@ const config = require('config')
 
 class RabbitMQ {
 	constructor() {
+    this.exchange = 'metrics'
 		this.rabbitConfig = config.get('rabbitmq')
 		const rabbitMqUrl = `amqp://${this.rabbitConfig.user}:${this.rabbitConfig.password}@${this.rabbitConfig.host}`
 		this.handler = amqplib.connect(rabbitMqUrl, { keepAlive: true })
@@ -31,12 +32,13 @@ class RabbitMQ {
 			.then((channel) => {
 				return channel
 					.assertQueue(queue, { exclusive: false })
-					.then(() =>
+					.then(() =>{
+            channel.bindQueue(queue, this.exchange, queue)
 						channel.consume(
 							queue,
 							(message) => messageHandler(message.content.toString()),
 							{ noAck: true }
-						)
+						)}
 					)
 					.then(() => console.log(`Consumed from ${queue}`))
 			})
