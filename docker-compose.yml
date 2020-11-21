@@ -1,44 +1,41 @@
 version: "3"
 
 services:
-  # consumer-mongodb:
-  #   build: ./consumer-mongodb
-  #   entrypoint: /home/node/consumer-mongodb/.docker/entrypoint.sh
-  #   container_name: consumer-mongodb
+  consumer-mongodb:
+    build: ./consumer-mongodb
+    entrypoint: /home/node/consumer-mongodb/.docker/entrypoint.sh
+    container_name: consumer-mongodb
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./consumer-mongodb:/home/node/consumer-mongodb
+    depends_on:
+      - rabbitmq
+      - producer-oxygen
+      - producer-humidity
+      - producer-temperature
+
+  # producer-oxygen:
+  #   build: ./producer-oxygen
+  #   entrypoint: /home/node/producer-oxygen/.docker/entrypoint.sh
+  #   container_name: producer-oxygen
   #   environment:
   #     - CHOKIDAR_USEPOLLING=true
-  #   ports:
-  #     - 3001:3333
   #   volumes:
-  #     - ./consumer-mongodb:/home/node/consumer-mongodb
-  #   # depends_on:
-  #   #   - rabbitmq
+  #     - ./producer-oxygen:/home/node/producer-oxygen
+  #   depends_on:
+  #     - rabbitmq
 
-  producer-oxygen:
-    build: ./producer-oxygen
-    entrypoint: /home/node/producer-oxygen/.docker/entrypoint.sh
-    container_name: producer-oxygen
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    ports:
-      - 3002:3333
-    volumes:
-      - ./producer-oxygen:/home/node/producer-oxygen
-    # depends_on:
-    #   - rabbitmq
-
-  producer-humidity:
-    build: ./producer-humidity
-    entrypoint: /home/node/producer-humidity/.docker/entrypoint.sh
-    container_name: producer-humidity
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    # ports:
-    #   - 3003:3333
-    volumes:
-      - ./producer-humidity:/home/node/producer-humidity
-    # depends_on:
-    #   - rabbitmq
+  # producer-humidity:
+  #   build: ./producer-humidity
+  #   entrypoint: /home/node/producer-humidity/.docker/entrypoint.sh
+  #   container_name: producer-humidity
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #   volumes:
+  #     - ./producer-humidity:/home/node/producer-humidity
+  #   depends_on:
+  #     - rabbitmq
 
   producer-temperature:
     build: ./producer-temperature
@@ -46,12 +43,10 @@ services:
     container_name: producer-temperature
     environment:
       - CHOKIDAR_USEPOLLING=true
-    # ports:
-    #   - 3004:3333
     volumes:
       - ./producer-temperature:/home/node/producer-temperature
-    # depends_on:
-    #   - rabbitmq
+    depends_on:
+      - rabbitmq
 
   rabbitmq:
     image: "rabbitmq:3.8-management-alpine"
@@ -62,6 +57,6 @@ services:
       - 5672:5672
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    # environment:
-    #   - RABBITMQ_DEFAULT_USER=guest
-    #   - RABBITMQ_DEFAULT_PASS=guest
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
