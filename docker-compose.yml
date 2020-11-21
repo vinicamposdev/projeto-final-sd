@@ -57,6 +57,3 @@ services:
       - 5672:5672
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest

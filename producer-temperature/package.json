@@ -6,6 +6,8 @@
     "start": "node src/producer/temperature.js"
   },
   "dependencies": {
-    "amqplib": "^0.6.0"
+    "amqplib": "^0.6.0",
+    "config": "^3.3.2",
+    "lodash": "^4.17.20"
   }
 }
