@@ -2,6 +2,9 @@
   "name": "temp-producer",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "start": "node src/producer/temperature.js"
+  },
   "dependencies": {
     "amqplib": "^0.6.0"
   }

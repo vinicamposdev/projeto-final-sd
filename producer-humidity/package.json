@@ -4,5 +4,8 @@
   "private": true,
   "dependencies": {
     "amqplib": "^0.6.0"
+  },
+  "scripts": {
+    "start": "node src/producer/humidity.js"
   }
 }

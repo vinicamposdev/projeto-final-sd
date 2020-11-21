@@ -5,7 +5,7 @@ const getRandom = (min,max) => {
 }
 
 function connectToRabbit() {
-  amqp.connect('amqp://localhost', function (error0, connection) {
+  amqp.connect('amqp://rabbitmq', function (error0, connection) {
     if (error0) {
       throw error0
     }
@@ -22,7 +22,7 @@ function connectToRabbit() {
         humidity: getRandom(-150,300),
         time: new Date()
       }
-      
+
       const buffer = Buffer.from(JSON.stringify(message).toString())
   
       channel.assertQueue(queue, { durable: false })
