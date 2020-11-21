@@ -15,21 +15,19 @@ function connectToRabbit() {
         throw error1
       }
   
-      const exchange = 'direct-metrics'
+      const exchange = 'metrics'
 
-      const queue = 'temperature'
-  
       const message = {
         type: 'temperature',
         temperature: getRandom(-150,300),
         time: new Date()
       }
       
+      channel.assertExchange(exchange, 'direct', { durable: false })
       const buffer = Buffer.from(JSON.stringify(message).toString())
   
-      channel.assertQueue(queue, { durable: false })
-  
-      channel.sendToQueue(queue, buffer)
+      channel.publish(exchange, 'temperature', buffer)
+
       console.log('[X] Sent ', buffer)
     })
   })

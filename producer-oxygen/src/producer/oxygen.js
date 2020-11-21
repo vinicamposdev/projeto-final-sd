@@ -15,19 +15,19 @@ function connectToRabbit() {
         throw error1
       }
   
-      const queue = 'oxygen'
-  
+      const exchange = 'metrics'
+
       const message = {
         type: 'oxygen',
         oxygen: getRandom(-150,300),
         time: new Date()
       }
       
+      channel.assertExchange(exchange, 'direct', { durable: false })
       const buffer = Buffer.from(JSON.stringify(message).toString())
   
-      channel.assertQueue(queue, { durable: false })
-  
-      channel.sendToQueue(queue, buffer)
+      channel.publish(exchange, 'oxygen', buffer)
+
       console.log('[X] Sent ', buffer)
     })
   })
