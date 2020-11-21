@@ -15,6 +15,8 @@ function connectToRabbit() {
         throw error1
       }
   
+      const exchange = 'direct-metrics'
+
       const queue = 'temperature'
   
       const message = {
