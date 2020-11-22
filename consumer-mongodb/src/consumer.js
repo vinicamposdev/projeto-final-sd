@@ -1,4 +1,4 @@
-var { DateTime } = require('luxon');
+const { DateTime } = require('luxon');
 const service = require('./service/rabbitmq');
 const logger = require('./logger');
 const db = require('./models');

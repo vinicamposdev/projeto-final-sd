@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd /home/node/consumer-mongodb
-sleep 10
+sleep 15
 npm install
 npm run start
 

@@ -11,9 +11,6 @@ services:
       - ./consumer-mongodb:/home/node/consumer-mongodb
     depends_on:
       - rabbitmq
-      - producer-oxygen
-      - producer-humidity
-      - producer-temperature
 
   producer-oxygen:
     build: ./producer-oxygen
