@@ -1,6 +1,6 @@
 'use strict';
 
-const moment = require('moment');
+const { DateTime } = require('luxon');
 const winston = require('winston');
 const config = require('config');
 
@@ -25,7 +25,7 @@ const loggerConfig = {
         console: {
             level: config.get('logger.console.level'),
             colorize: 'none',
-            timestamp: 'YYYY-MM-DD HH:mm:ss.SSS'
+            timestamp: 'dd/MM/yyyy HH:mm:ss'
         }
     }
 };
@@ -39,7 +39,7 @@ const consoleOpt = {
     colorize: true,
     prettyPrint,
     timestamp() {
-        return moment().format(loggerConfig.transports.console.timestamp);
+        return DateTime.local().setLocale('pt-BR').toFormat(loggerConfig.transports.console.timestamp);
     },
     handleExceptions: false
 };
@@ -47,7 +47,7 @@ const consoleOpt = {
 const errorConsoleOpt = {
     colorize: true,
     timestamp() {
-        return moment().format(loggerConfig.transports.console.timestamp);
+        return DateTime.local().setLocale('pt-BR').toFormat(loggerConfig.transports.console.timestamp);
     },
     handleExceptions: true,
     humanReadableUnhandledException: true

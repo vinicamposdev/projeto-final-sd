@@ -6,6 +6,6 @@ const db = {};
 
 db.mongoose = mongoose;
 db.url = dbConfig.url;
-db.vehicle = require("./temperature.models")(mongoose);
+db.dummy = require("./dummy.models")(mongoose);
 
 module.exports = db;

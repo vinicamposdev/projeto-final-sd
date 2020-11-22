@@ -22,9 +22,10 @@
 //         db.collection('dummy')
 
 //     })
-//     .catch((err) => {
-//         console.log("Cannot connect to the database!", err);
-//         process.exit();
-//     });
+    // .catch((err) => {
+    //     console.log("Cannot connect to the database!", err);
+    //     process.exit();
+    // });
 
-require('./dummyConsumer');
+// require('./dummyConsumer');
+require('./consumer');

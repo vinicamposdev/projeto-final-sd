@@ -7,27 +7,40 @@ class RabbitMQ {
 
     constructor() {
         this.exchange = 'metrics';
+        this.queues = config.get('consumer.queue').split('|');
         this.rabbitConfig = config.get('rabbitmq');
-        const rabbitMqUrl = `amqp://${this.rabbitConfig.user}:${this.rabbitConfig.password}@${this.rabbitConfig.host}`;
-        logger.info('Starting RabbitMQ connection :', rabbitMqUrl);
-        this.handler = amqplib.connect(rabbitMqUrl, { keepAlive: true });
+        this.urlAMQP = `amqp://${this.rabbitConfig.user}:${this.rabbitConfig.password}@${this.rabbitConfig.host}`;
+        logger.info('Starting RabbitMQ connection : ', this.urlAMQP);
     }
 
-    subscribeQueue(queue, messageHandler) {
-        return this.handler
-            .then(conn => conn.createChannel())
-            .then(channel => {
-                logger.info(`Consuming from ${queue}`);
-                return channel.assertQueue(queue, { exclusive: false })
-                    .then(() => {
-                        channel.bindQueue(queue, this.exchange, 'temperature')
-                        channel.consume(queue, message => messageHandler(message.content.toString()), { noAck: true })
-                    })
-                    .then(() => logger.info(`Consumed from ${queue}`))
-            })
-            .catch(logger.error);
-    }
+    async subscribeQueue(messageHandler) {
+        const conn = await amqplib.connect(this.urlAMQP);
+        if (!conn) return logger.error('Consumer failed in create a connection');
 
+        for (const queue of this.queues) {
+            logger.info("Created Consumer for : ", queue);
+
+            const channel = await conn.createChannel();
+            if (!channel) return logger.error('Consumer failed in create channel');
+
+            let queueAreAsserted = await channel.assertQueue(queue, { exclusive: false });
+
+            if (queueAreAsserted.messageCount > 0) {
+                await channel.bindQueue(queue, this.exchange, queueAreAsserted.type);
+                await channel.consume(
+                    queue,
+                    (message) => messageHandler(message.content.toString()),
+                    { noAck: true }
+                );
+
+                console.log(`Consumed from ${queue}`);
+            }
+
+            await channel.close();
+        };
+
+        await conn.close();
+    }
 }
 
 const rabbitMQ = new RabbitMQ();

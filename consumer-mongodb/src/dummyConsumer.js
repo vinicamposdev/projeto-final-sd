@@ -5,7 +5,8 @@ const rabbitMQ = require('./service/rabbitmq');
 class BookingConsumer {
     constructor() {
         this.queue = config.get("consumer").queue;
-        rabbitMQ.subscribeQueue('temperature', this.handleMessage.bind(this));// |.split()
+        // rabbitMQ.subscribeQueue('temperature', this.handleMessage.bind(this));// |.split()
+            rabbitMQ.subscribeQueue('temperature', this.handleMessage.bind(this))
         logger.info("Created Consumer for : ", this.queue);
     }
 
