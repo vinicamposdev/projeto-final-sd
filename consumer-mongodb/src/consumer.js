@@ -36,7 +36,6 @@ async function connectToRabbit() {
 
     await service.subscribeQueue(function (messageRaw) {
         const message = JSON.parse(messageRaw);
-
         switch (message.type) {
             case 'oxygen':
                 tempMetrics.oxygen.push(message.oxygen);

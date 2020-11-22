@@ -23,10 +23,8 @@ class RabbitMQ {
             const channel = await conn.createChannel();
             if (!channel) return logger.error('Consumer failed in create channel');
 
-            let queueAreAsserted = await channel.assertQueue(queue, { exclusive: false });
-
-            if (queueAreAsserted.messageCount > 0) {
-                await channel.bindQueue(queue, this.exchange, queueAreAsserted.type);
+            await channel.assertQueue(queue, { exclusive: false });
+                await channel.bindQueue(queue, this.exchange, queue);
                 await channel.consume(
                     queue,
                     (message) => messageHandler(message.content.toString()),
@@ -34,7 +32,6 @@ class RabbitMQ {
                 );
 
                 console.log(`Consumed from ${queue}`);
-            }
 
             await channel.close();
         };
