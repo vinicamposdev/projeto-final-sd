@@ -7,38 +7,35 @@ services:
     container_name: consumer-mongodb
     environment:
       - CHOKIDAR_USEPOLLING=true
-      - WAIT_HOSTS=producer-temperature
-      - WAIT_HOSTS_TIMEOUT=300
-      - WAIT_SLEEP_INTERVAL=30
-      - WAIT_HOST_CONNECT_TIMEOUT=30
     volumes:
       - ./consumer-mongodb:/home/node/consumer-mongodb
     depends_on:
       - rabbitmq
+      - producer-oxygen
+      - producer-humidity
       - producer-temperature
-    # command: sh -c "/wait"
 
-  # producer-oxygen:
-  #   build: ./producer-oxygen
-  #   entrypoint: /home/node/producer-oxygen/.docker/entrypoint.sh
-  #   container_name: producer-oxygen
-  #   environment:
-  #     - CHOKIDAR_USEPOLLING=true
-  #   volumes:
-  #     - ./producer-oxygen:/home/node/producer-oxygen
-  #   depends_on:
-  #     - rabbitmq
+  producer-oxygen:
+    build: ./producer-oxygen
+    entrypoint: /home/node/producer-oxygen/.docker/entrypoint.sh
+    container_name: producer-oxygen
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./producer-oxygen:/home/node/producer-oxygen
+    depends_on:
+      - rabbitmq
 
-  # producer-humidity:
-  #   build: ./producer-humidity
-  #   entrypoint: /home/node/producer-humidity/.docker/entrypoint.sh
-  #   container_name: producer-humidity
-  #   environment:
-  #     - CHOKIDAR_USEPOLLING=true
-  #   volumes:
-  #     - ./producer-humidity:/home/node/producer-humidity
-  #   depends_on:
-  #     - rabbitmq
+  producer-humidity:
+    build: ./producer-humidity
+    entrypoint: /home/node/producer-humidity/.docker/entrypoint.sh
+    container_name: producer-humidity
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./producer-humidity:/home/node/producer-humidity
+    depends_on:
+      - rabbitmq
 
   producer-temperature:
     build: ./producer-temperature

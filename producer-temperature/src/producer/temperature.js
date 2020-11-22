@@ -19,7 +19,7 @@ async function connectToRabbit() {
 }
 
 async function handle () {
-  setInterval(connectToRabbit, 5000);
+  setInterval(connectToRabbit, 1000);
 }
 
 handle()

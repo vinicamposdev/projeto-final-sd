@@ -58,7 +58,6 @@ async function connectToRabbit() {
     };
 
     try {
-        await connectToDatabase();
         dummyController.insert(metrics);
         logger.info(`Metrics was save successfuly on database : ${JSON.stringify(metrics)}`);
     } catch (error) {
@@ -71,5 +70,6 @@ async function handle() {
     setInterval(connectToRabbit, TIME_IN_SECONDS);
 }
 
+connectToDatabase();
 handle();
 
