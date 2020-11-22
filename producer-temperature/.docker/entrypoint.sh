@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd /home/node/producer-temperature
-sleep 5
+sleep 15
 npm install
 npm run start
 
