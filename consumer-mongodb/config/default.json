@@ -1,0 +1,16 @@
+{
+    "logger": {
+        "threshold": "debug",
+        "console": {
+            "level": "debug"
+        }
+    },
+    "consumer": {
+        "queue": "humidity|temperature|oxygen"
+    },
+    "rabbitmq": {
+        "host": "rabbitmq:5672",
+        "user": "guest",
+        "password": "guest"
+    }
+}
