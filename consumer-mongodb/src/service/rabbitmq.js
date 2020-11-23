@@ -35,7 +35,7 @@ class RabbitMQ {
                                 (message) => {
                                     let integrityMaintened = this.integrityCheck(message.content.toString());
 
-                                    if (integrityMaintened || message.fields.redelivered) {
+                                    if (!integrityMaintened){// || message.fields.redelivered) {
                                         messageHandler(message.content.toString());
                                         channel.ack(message);
                                     } else {

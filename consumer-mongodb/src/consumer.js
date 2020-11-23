@@ -1,6 +1,7 @@
 const { DateTime } = require('luxon');
 const service = require('./service/rabbitmq');
 const logger = require('./service/logger');
+const mailer = require('./service/mailer');
 const db = require('./models');
 const atmosphericController = require('./controllers/atmosphericController');
 const TIME_IN_SECONDS = 10000;
@@ -64,6 +65,8 @@ async function connectToRabbit() {
     
         try {
             atmosphericController.insert(metrics);
+            mailer.sendMail(metrics);
+
             logger.info(`Metrics was save successfuly on database : ${JSON.stringify(metrics)}`);
         } catch (error) {
             logger.error(`Failed to save metrics on database : ${JSON.stringify(metrics)}`);
