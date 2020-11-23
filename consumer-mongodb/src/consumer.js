@@ -23,7 +23,7 @@ async function connectToDatabase() {
 }
 
 const avg = (elements) => {
-    return elements.reduce((a, b) => a + b, 0) / elements.length || 0; // NaN => Não há registros (FUROU! Quebra o cast do banco)
+    return elements.reduce((a, b) => a + b, 0) / elements.length || 0;
 }
 
 async function connectToRabbit() {
@@ -34,7 +34,7 @@ async function connectToRabbit() {
         temperature: []
     };
 
-    await service.subscribeQueue(function (messageRaw) {
+    await service.startConsumeQueues(function (messageRaw) {
         const message = JSON.parse(messageRaw);
         switch (message.type) {
             case 'oxygen':
@@ -49,26 +49,30 @@ async function connectToRabbit() {
         }
     });
 
-    const metrics = {
-        oxygen: avg(tempMetrics.oxygen),
-        humidity: avg(tempMetrics.humidity),
-        temperature: avg(tempMetrics.temperature),
-        date: DateTime.local().setLocale('pt-BR').toFormat('dd/MM/yyyy')
-    };
-
-    try {
-        dummyController.insert(metrics);
-        logger.info(`Metrics was save successfuly on database : ${JSON.stringify(metrics)}`);
-    } catch (error) {
-        logger.error(`Failed to save metrics on database : ${JSON.stringify(metrics)}`);
-    }
+    setInterval(() => {
+        const metrics = {
+            oxygen: avg(tempMetrics.oxygen),
+            humidity: avg(tempMetrics.humidity),
+            temperature: avg(tempMetrics.temperature),
+            date: DateTime.local().setLocale('pt-BR').toFormat('dd/MM/yyyy')
+        };
+        tempMetrics = {
+            oxygen: [],
+            humidity: [],
+            temperature: []
+        };
+    
+        try {
+            dummyController.insert(metrics);
+            logger.info(`Metrics was save successfuly on database : ${JSON.stringify(metrics)}`);
+        } catch (error) {
+            logger.error(`Failed to save metrics on database : ${JSON.stringify(metrics)}`);
+        }
+        
+    }, TIME_IN_SECONDS);
 
 }
 
-async function handle() {
-    setInterval(connectToRabbit, TIME_IN_SECONDS);
-}
-
+connectToRabbit();
 connectToDatabase();
-handle();
 
