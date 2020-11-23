@@ -6,7 +6,7 @@
     }
   },
   "consumer": {
-    "queue": "booking-logging"
+    "queue": "humidity"
   },
   "rabbitmq": {
     "host": "rabbitmq:5672",

@@ -1,6 +1,6 @@
 const { DateTime } = require('luxon');
 const service = require('./service/rabbitmq');
-const logger = require('./logger');
+const logger = require('./service/logger');
 const db = require('./models');
 const dummyController = require('./controllers/dummyController');
 const TIME_IN_SECONDS = 10000;

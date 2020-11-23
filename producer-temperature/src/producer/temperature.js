@@ -1,4 +1,3 @@
-const amqp = require('amqplib/callback_api')
 const service = require('../service/rabbitmq')
 
 const getRandom = (min,max) => {
