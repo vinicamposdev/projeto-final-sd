@@ -6,7 +6,7 @@ exports.insert = (metrics) => {
     const atmospheric = new Atmospheric(metrics);
 
     // Save atmospheric in the database
-    return atmospheric
+    atmospheric
         .save()
         .then(data => {
             return data;

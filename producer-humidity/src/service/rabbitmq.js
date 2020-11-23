@@ -14,16 +14,64 @@ class RabbitMQ {
 		return this.handler
 			.then((connection) => connection.createChannel())
 			.then((channel) =>
-				channel
-					.assertExchange(exchange, 'direct', { durable: false })
-					.then(() => channel.publish(exchange, key, Buffer.from(JSON.stringify(message))))
-					.then(() => {
-                        console.log('message', message)
-                        channel.close()
-                    })
+                assertExchange('invalid_data', 'fanout', { durable: false })
+                .then(() =>
+                    channel
+                        .assertExchange(exchange, 'direct', { durable: false })
+                        .then(() => {
+                            let integrityMaintened = this.integrityCheck(JSON.stringify(message));
+
+                            if (!integrityMaintened) {
+                                channel.publish('invalid_data', '', Buffer.from(JSON.stringify(message)))
+                            } else {
+                                channel.publish(exchange, key, Buffer.from(JSON.stringify(message)))
+                            }
+                        })
+                        .then(() => {
+                            console.log('message', message)
+                            channel.close()
+                        })
+                )
 			)
 			.catch((error) => console.log('error', error))
-	}
+    }
+
+    async subscribeQueue(queue, messageHandler) {
+		return this.handler
+			.then((conn) => conn.createChannel())
+			.then((channel) => {
+				return channel
+					.assertQueue(queue, { exclusive: false })
+                    .then(() => {
+                        return channel
+                        .bindQueue(queue, this.exchange, queue)
+                        .then(()=>{
+                            channel.consume(
+                                queue,
+                                (message) => {
+                                    messageHandler(message.content.toString());
+                                    channel.ack(message, false);
+                                }
+                            )
+                        })
+                    })
+					.then(() => {console.log(`Consumed from ${queue}`)})
+			})
+			.catch((error) => console.log('error', error))
+    }
+
+    integrityCheck(message) {
+        let messageObject = JSON.parse(message);
+
+        if ((messageObject.type === 'temperature' && !messageObject.hasOwnProperty('temperature'))
+            || (messageObject.type === 'oxygen' && !messageObject.hasOwnProperty('oxygen'))
+            || (messageObject.type === 'humidity' && !messageObject.hasOwnProperty('humidity'))
+        ) {
+            return false;
+        }
+
+        return true;
+    }
 }
 
 const rabbitMq = new RabbitMQ()

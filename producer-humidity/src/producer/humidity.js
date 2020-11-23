@@ -1,4 +1,5 @@
 const service = require('../service/rabbitmq')
+const mailer = require('../service/mailer');
 
 const getRandom = (min,max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -14,6 +15,18 @@ async function connectToRabbit() {
     time: new Date()
   }
   await service.sendMessage(exchange,'humidity',message)
+
+  let invalidMessages = [];
+  setInterval(async () => {
+    await service.subscribeQueue('invalid_data', function (messageRaw) {
+        invalidMessages.push(messageRaw);
+    });
+
+    if (invalidMessages.length > 0) {
+        mailer.sendMail(JSON.stringify(invalidMessages));
+        invalidMessages = [];
+    }
+  }, 5000);
 }
 
 async function handle () {

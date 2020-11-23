@@ -33,14 +33,8 @@ class RabbitMQ {
                             channel.consume(
                                 queue,
                                 (message) => {
-                                    let integrityMaintened = this.integrityCheck(message.content.toString());
-
-                                    if (!integrityMaintened){// || message.fields.redelivered) {
-                                        messageHandler(message.content.toString());
-                                        channel.ack(message);
-                                    } else {
-                                        channel.nack(message);
-                                    }
+                                    messageHandler(message.content.toString());
+                                    channel.ack(message);
                                 }
                             )
                         })
@@ -48,19 +42,6 @@ class RabbitMQ {
 					.then(() => {console.log(`Consumed from ${queue}`)})
 			})
 			.catch((error) => console.log('error', error))
-    }
-    
-    integrityCheck(message) {
-        let messageObject = JSON.parse(message);
-
-        if (!messageObject.hasOwnProperty('temperature')
-            || !messageObject.hasOwnProperty('oxygen')
-            || !messageObject.hasOwnProperty('humidity')
-        ) {
-            return false;
-        }
-
-        return true;
     }
 }
 

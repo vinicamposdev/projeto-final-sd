@@ -12,27 +12,27 @@ services:
     depends_on:
       - rabbitmq
 
-  producer-oxygen:
-    build: ./producer-oxygen
-    entrypoint: /home/node/producer-oxygen/.docker/entrypoint.sh
-    container_name: producer-oxygen
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    volumes:
-      - ./producer-oxygen:/home/node/producer-oxygen
-    depends_on:
-      - rabbitmq
+  # producer-oxygen:
+  #   build: ./producer-oxygen
+  #   entrypoint: /home/node/producer-oxygen/.docker/entrypoint.sh
+  #   container_name: producer-oxygen
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #   volumes:
+  #     - ./producer-oxygen:/home/node/producer-oxygen
+  #   depends_on:
+  #     - rabbitmq
 
-  producer-humidity:
-    build: ./producer-humidity
-    entrypoint: /home/node/producer-humidity/.docker/entrypoint.sh
-    container_name: producer-humidity
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    volumes:
-      - ./producer-humidity:/home/node/producer-humidity
-    depends_on:
-      - rabbitmq
+  # producer-humidity:
+  #   build: ./producer-humidity
+  #   entrypoint: /home/node/producer-humidity/.docker/entrypoint.sh
+  #   container_name: producer-humidity
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #   volumes:
+  #     - ./producer-humidity:/home/node/producer-humidity
+  #   depends_on:
+  #     - rabbitmq
 
   producer-temperature:
     build: ./producer-temperature

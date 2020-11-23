@@ -5,9 +5,10 @@
   "dependencies": {
     "amqplib": "^0.6.0",
     "config": "^3.3.2",
-    "lodash": "^4.17.20"
+    "lodash": "^4.17.20",
+    "nodemon": "^2.0.4"
   },
   "scripts": {
-    "start": "node src/producer/oxygen.js"
+    "start": "nodemon src/producer/oxygen.js"
   }
 }

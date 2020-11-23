@@ -65,7 +65,7 @@ async function connectToRabbit() {
     
         try {
             atmosphericController.insert(metrics);
-            mailer.sendMail(metrics);
+            // mailer.sendMail(JSON.stringify(metrics));
 
             logger.info(`Metrics was save successfuly on database : ${JSON.stringify(metrics)}`);
         } catch (error) {
