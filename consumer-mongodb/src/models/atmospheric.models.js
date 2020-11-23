@@ -10,7 +10,7 @@ module.exports = (mongoose) => {
         }
     });
 
-    const Dummy = mongoose.model('dummies', schema);
+    const Atmospheric = mongoose.model('atmospherics', schema);
 
-    return Dummy;
+    return Atmospheric;
 };
