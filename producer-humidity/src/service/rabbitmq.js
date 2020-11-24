@@ -14,8 +14,9 @@ class RabbitMQ {
 	sendMessage(exchange, key, message) {
 		return this.handler
 			.then((connection) => connection.createChannel())
-			.then((channel) =>
-                assertExchange('invalid_data', 'fanout', { durable: false })
+            .then((channel) =>
+                channel
+                .assertExchange('invalid_data', 'fanout', { durable: false })
                 .then(() =>
                     channel
                         .assertExchange(exchange, 'direct', { durable: false })
