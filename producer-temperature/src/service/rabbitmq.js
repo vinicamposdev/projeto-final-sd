@@ -23,7 +23,7 @@ class RabbitMQ {
                         .then(() => {
                             let integrityMaintened = this.integrityCheck(JSON.stringify(message));
 
-                            if (integrityMaintened) {
+                            if (!integrityMaintened) {
                                 channel.publish('invalid_data', '', Buffer.from(JSON.stringify(message)))
                             } else {
                                 channel.publish(exchange, key, Buffer.from(JSON.stringify(message)))

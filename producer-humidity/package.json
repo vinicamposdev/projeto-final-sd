@@ -8,6 +8,7 @@
     "lodash": "^4.17.20",
     "luxon": "^1.25.0",
     "winston": "^2.3.0",
+    "nodemon": "^2.0.4",
     "nodemailer": "^6.4.16"
   },
   "scripts": {

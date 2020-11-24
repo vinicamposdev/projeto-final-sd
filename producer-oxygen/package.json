@@ -6,7 +6,10 @@
     "amqplib": "^0.6.0",
     "config": "^3.3.2",
     "lodash": "^4.17.20",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "nodemailer": "^6.4.16",
+    "luxon": "^1.25.0",
+    "winston": "^2.3.0"
   },
   "scripts": {
     "start": "nodemon src/producer/oxygen.js"
