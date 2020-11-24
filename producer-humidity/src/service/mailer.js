@@ -17,8 +17,8 @@ class Email {
     sendMail(contentEmail) {
         const mailOptions = {
             from: 'noreply@atmospheric.com',
-            to: 'station@atmospheric.com',
-            subject: 'Métricas Atmosféricas',
+            to: 'technical@atmospheric.com',
+            subject: 'Dados inválidos',
             text: contentEmail
         };
 
