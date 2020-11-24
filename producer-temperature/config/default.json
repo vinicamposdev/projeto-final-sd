@@ -6,7 +6,7 @@
     }
   },
   "consumer": {
-    "queue": "booking-logging"
+    "queue": "temperature"
   },
   "rabbitmq": {
     "host": "rabbitmq:5672",

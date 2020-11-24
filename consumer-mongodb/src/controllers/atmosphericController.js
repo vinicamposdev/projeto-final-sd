@@ -1,12 +1,12 @@
 const db = require('../models')
-const Dummy = db.dummy;
+const Atmospheric = db.atmospheric;
 
 exports.insert = (metrics) => {
-    // Create a Event instance
-    const dummy = new Dummy(metrics);
+    // Create a Atmospheric instance
+    const atmospheric = new Atmospheric(metrics);
 
-    // Save dummy in the database
-    dummy
+    // Save atmospheric in the database
+    atmospheric
         .save()
         .then(data => {
             return data;

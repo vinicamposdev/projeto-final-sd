@@ -1,7 +1,7 @@
 
 const amqplib = require('amqplib');
 const config = require('config');
-const logger = require('../logger');
+const logger = require('./logger');
 
 class RabbitMQ {
 
@@ -11,32 +11,37 @@ class RabbitMQ {
         this.rabbitConfig = config.get('rabbitmq');
         this.urlAMQP = `amqp://${this.rabbitConfig.user}:${this.rabbitConfig.password}@${this.rabbitConfig.host}`;
         logger.info('Starting RabbitMQ connection : ', this.urlAMQP);
+        this.handler = amqplib.connect(this.urlAMQP, { keepAlive: true });
     }
 
-    async subscribeQueue(messageHandler) {
-        const conn = await amqplib.connect(this.urlAMQP);
-        if (!conn) return logger.error('Consumer failed in create a connection');
-
+    async startConsumeQueues(messageHandler) {
         for (const queue of this.queues) {
-            logger.info("Created Consumer for : ", queue);
-
-            const channel = await conn.createChannel();
-            if (!channel) return logger.error('Consumer failed in create channel');
-
-            await channel.assertQueue(queue, { exclusive: false });
-                await channel.bindQueue(queue, this.exchange, queue);
-                await channel.consume(
-                    queue,
-                    (message) => messageHandler(message.content.toString()),
-                    { noAck: true }
-                );
-
-                console.log(`Consumed from ${queue}`);
-
-            await channel.close();
+            await this.subscribeQueue(queue, messageHandler)
         };
+    }
 
-        await conn.close();
+    subscribeQueue(queue, messageHandler) {
+		return this.handler
+			.then((conn) => conn.createChannel())
+			.then((channel) => {
+				return channel
+					.assertQueue(queue, { exclusive: false })
+                    .then(() => {
+                        return channel
+                        .bindQueue(queue, this.exchange, queue)
+                        .then(()=>{
+                            channel.consume(
+                                queue,
+                                (message) => {
+                                    messageHandler(message.content.toString());
+                                    channel.ack(message);
+                                }
+                            )
+                        })
+                    })
+					.then(() => {console.log(`Consumed from ${queue}`)})
+			})
+			.catch((error) => console.log('error', error))
     }
 }
 
