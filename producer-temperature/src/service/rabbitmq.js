@@ -8,7 +8,7 @@ class RabbitMQ {
 		this.rabbitConfig = config.get('rabbitmq')
 		const rabbitMqUrl = `amqp://${this.rabbitConfig.user}:${this.rabbitConfig.password}@${this.rabbitConfig.host}`
         this.handler = amqplib.connect(rabbitMqUrl, { keepAlive: true })
-        this.exchange = 'invalid_data'
+        this.invalid_exchange = 'invalid_data';
 	}
 
 	sendMessage(exchange, key, message) {
@@ -16,14 +16,14 @@ class RabbitMQ {
 			.then((connection) => connection.createChannel())
 			.then((channel) =>
                 channel
-                    .assertExchange('invalid_data', 'fanout', { durable: false })
+                    .assertExchange(this.invalid_exchange, 'fanout', { durable: false })
                     .then(() =>
                         channel
                         .assertExchange(exchange, 'direct', { durable: false })
                         .then(() => {
                             let integrityMaintened = this.integrityCheck(JSON.stringify(message));
 
-                            if (!integrityMaintened) {
+                            if (integrityMaintened) {
                                 channel.publish('invalid_data', '', Buffer.from(JSON.stringify(message)))
                             } else {
                                 channel.publish(exchange, key, Buffer.from(JSON.stringify(message)))
@@ -46,7 +46,7 @@ class RabbitMQ {
 					.assertQueue(queue, { exclusive: false })
                     .then(() => {
                         return channel
-                        .bindQueue(queue, this.exchange, queue)
+                        .bindQueue(queue, this.invalid_exchange, this.invalid_exchange)
                         .then(()=>{
                             channel.consume(
                                 queue,

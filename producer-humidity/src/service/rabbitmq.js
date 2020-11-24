@@ -7,7 +7,8 @@ class RabbitMQ {
 	constructor() {
 		this.rabbitConfig = config.get('rabbitmq')
 		const rabbitMqUrl = `amqp://${this.rabbitConfig.user}:${this.rabbitConfig.password}@${this.rabbitConfig.host}`
-		this.handler = amqplib.connect(rabbitMqUrl, { keepAlive: true })
+        this.handler = amqplib.connect(rabbitMqUrl, { keepAlive: true })
+        this.invalid_exchange = 'invalid_data';
 	}
 
 	sendMessage(exchange, key, message) {
@@ -44,13 +45,13 @@ class RabbitMQ {
 					.assertQueue(queue, { exclusive: false })
                     .then(() => {
                         return channel
-                        .bindQueue(queue, this.exchange, queue)
+                        .bindQueue(queue, this.invalid_exchange, this.invalid_exchange)
                         .then(()=>{
                             channel.consume(
                                 queue,
                                 (message) => {
                                     messageHandler(message.content.toString());
-                                    channel.ack(message, false);
+                                    channel.ack(message);
                                 }
                             )
                         })

@@ -15,22 +15,26 @@ async function connectToRabbit() {
         time: new Date()
     }
     await service.sendMessage(exchange, 'humidity', message)
+}
 
+async function subscribeInvalidDataQueue() {
     let invalidMessages = [];
     await service.subscribeQueue('invalid_data', function (messageRaw) {
         invalidMessages.push(messageRaw);
     });
 
-    setInterval(async () => {
+    setInterval(() => {
         if (invalidMessages.length > 0) {
             mailer.sendMail(JSON.stringify(invalidMessages));
             invalidMessages = [];
         }
+        
     }, 5000);
 }
 
 async function handle() {
     setInterval(connectToRabbit, 100);
+    await subscribeInvalidDataQueue();
 }
 
 handle()
